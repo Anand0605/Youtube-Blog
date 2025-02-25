@@ -31,21 +31,25 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        // Await lagao kyunki matchPassword ek async function hai
-        const user = await User.matchPassword(email, password);
+        const { user, token } = await User.matchPasswordAndGenerateToken(email, password);
 
         if (!user) {
-            return res.status(401).send("Invalid email or password");
+            return res.status(401).render("signin", { error: "Invalid email or password" });
         }
 
+        console.log("Token:", token);
         console.log("User logged in:", user);
-        return res.redirect("/");
+
+        return res.render("home", { error: null }); // ✅ Error variable pass karein
     } catch (error) {
         console.error("Signin error:", error.message);
-        return res.status(401).send("Incorrect password or user not found");
+        return res.status(401).render("signin", { error: "Incorrect password or user not found" });
     }
 });
+
+
+
+
 
 
 
