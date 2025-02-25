@@ -11,6 +11,10 @@ router.get("/signup", (req, res) => {
     return res.render("signup");
 });
 
+router.get("/logout",(req, res)=>{
+    res.clearCookie("token").redirect("/")
+})
+
 router.post("/signup", async (req, res) => {
     console.log("Request Body:", req.body); // Debugging ke liye
 
@@ -40,7 +44,7 @@ router.post("/signin", async (req, res) => {
         console.log("Token:", token);
         console.log("User logged in:", user);
 
-        return res.render("home", { error: null }); // ✅ Error variable pass karein
+        return res.render("home", { user, error: null }); // ✅ Error variable pass karein
     } catch (error) {
         console.error("Signin error:", error.message);
         return res.status(401).render("signin", { error: "Incorrect password or user not found" });
