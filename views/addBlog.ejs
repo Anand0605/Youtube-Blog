@@ -3,20 +3,27 @@
 
 <head>
     <%- include('./partials/head') %>
-        <title>Add new page</title>
+    <title>Add New Blog</title>
 </head>
 
 <body>
     <%- include('./partials/nav') %>
-        <div class="container mt-3">
-            <form>
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="email" class="form-control" id="title" name="title" aria-describedby="emailHelp">
-                </div>
-            </form>
-        </div>
-        <%- include('./partials/scripts') %>
+
+    <div class="container mt-3">
+        <h2>Add New Blog</h2>
+
+        <!-- Debugging User Data -->
+        <pre><%- JSON.stringify(user, null, 2) %></pre> 
+
+        <form>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title">
+            </div>
+        </form>
+    </div>
+
+    <%- include('./partials/scripts') %>
 </body>
 
 </html>
