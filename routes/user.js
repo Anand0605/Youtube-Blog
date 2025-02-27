@@ -32,6 +32,25 @@ router.post("/signup", async (req, res) => {
         return res.status(500).send("Internal Server Error");
     }
 });
+// router.post("/signin", async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+//         const { user, token } = await User.matchPasswordAndGenerateToken(email, password);
+
+//         if (!user) {
+//             return res.status(401).render("signin", { error: "Invalid email or password" });
+//         }
+
+//         console.log("Token:", token);
+//         console.log("User logged in:", user);
+
+//         return res.render("home", { user, error: null }); // ✅ Error variable pass karein
+//     } catch (error) {
+//         console.error("Signin error:", error.message);
+//         return res.status(401).render("signin", { error: "Incorrect password or user not found" });
+//     }
+// });
+
 router.post("/signin", async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -44,12 +63,20 @@ router.post("/signin", async (req, res) => {
         console.log("Token:", token);
         console.log("User logged in:", user);
 
-        return res.render("home", { user, error: null }); // ✅ Error variable pass karein
+        // ✅ Cookie Set Karo
+        res.cookie("token", token, {
+            httpOnly: true,   // ✅ Security ke liye
+            secure: false,    // ❌ Dev Mode me `false`, Production me `true`
+            maxAge: 3600000,  // ✅ 1 Hour ke liye token valid rahega
+        });
+
+        return res.redirect("/");  // ✅ Redirect to home after login
     } catch (error) {
         console.error("Signin error:", error.message);
         return res.status(401).render("signin", { error: "Incorrect password or user not found" });
     }
 });
+
 
 
 
