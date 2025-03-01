@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head') %>
+    <title><%= blog ? blog.title : "Blog Not Found" %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #070738;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .image-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .blog-meta {
+            font-size: 14px;
+            color: gray;
+            margin-bottom: 8px;
+        }
+
+        .blog-image {
+            width: 100%;
+            max-width: 600px;
+            max-height: 300px;
+            border-radius: 6px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .blog-content {
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .login-status {
+            text-align: right;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include('./partials/nav') %>
+
+    <div class="container">
+        <!-- ✅ Show login status -->
+        <div class="login-status">
+            <% if (user) { %>
+                <p>Welcome, <strong><%= user.username %></strong>! <a href="/logout">Logout</a></p>
+            <% } else { %>
+                <p><a href="/login">Login</a> to add a blog</p>
+            <% } %>
+        </div>
+
+        <% if (blog) { %>
+            <h1><%= blog.title %></h1>
+
+            <div class="image-wrapper">
+                <p class="blog-meta">Published on <%= blog.createdAt.toDateString() %></p>
+                <% if (blog.coverImageUrl) { %>
+                    <img src="<%= blog.coverImageUrl %>" class="blog-image" alt="Blog Image">
+                <% } %>
+            </div>
+
+            <div class="blog-content">
+                <p>
+                    <%- blog.body.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>') %>
+                </p>
+            </div>
+
+        <% } else { %>
+            <h1>Blog Not Found</h1>
+            <p>Sorry, the blog post you are looking for does not exist.</p>
+        <% } %>
+
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+
+    <%- include('./partials/scripts') %>
+
+</body>
+
+</html>

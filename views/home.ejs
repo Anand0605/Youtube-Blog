@@ -3,17 +3,72 @@
 <head>
     <%- include('./partials/head') %>
     <title>Homepage</title>
+    <style>
+        /* Styling for layout */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns per row */
+            gap: 20px; /* Space between divs */
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        h1, p {
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) { /* Tablet */
+            .container {
+                grid-template-columns: repeat(2, 1fr); /* 2 per row */
+            }
+        }
+
+        @media (max-width: 768px) { /* Mobile */
+            .container {
+                grid-template-columns: repeat(1, 1fr); /* 1 per row */
+            }
+        }
+    </style>
 </head>
-<!-- <body>
-   
-
-    <h1>Welcome to the Blog!</h1>
-    <p>This is the homepage.</p>
-
-</body> -->
-<body>
+<body style="color: #070738; background-color: #070738;">
+    
     <%- include('./partials/nav') %>
-    <%= JSON.stringify(user) %>
+
+    <h1 style="color: aliceblue;">Welcome to the Blog!</h1>
+    <p style="color: aliceblue;">This is the homepage.</p>
+
+    <div class="container">
+        <% blogs.forEach(blog => { %>
+            <div class="card">
+                <img src="<%= blog.coverImageUrl %>" class="card-img-top" alt="Blog Image">
+                <div class="card-body">
+                    <h5 class="card-title"><%= blog.title %></h5>
+                    <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
     <%- include('./partials/scripts') %>
+
 </body>
 </html>
