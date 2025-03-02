@@ -4,71 +4,154 @@
     <%- include('./partials/head') %>
     <title>Homepage</title>
     <style>
-        /* Styling for layout */
-        .container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 columns per row */
-            gap: 20px; /* Space between divs */
-            justify-content: center;
-            padding: 20px;
+        /* Global Styles */
+        body {
+            color: #070738;
+            background-color: #070738;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
+        /* Main Content */
+        .main-content {
+            flex: 1; /* Pushes footer to bottom */
+        }
+
+        /* Header Text */
+        h1, p {
+            text-align: center;
+            padding: 10px;
+            color: aliceblue;
+        }
+
+        /* Main Container */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* Card Styling */
         .card {
             background-color: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transition: transform 0.3s ease-in-out;
         }
 
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Image Styling */
         .card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
         }
 
+        /* Card Body */
         .card-body {
             padding: 15px;
         }
 
-        h1, p {
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            display: inline-block;
+            padding: 8px 12px;
+            font-size: 14px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #1a1a2e;
+            color: #fff;
             text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #00aaff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive Design */
-        @media (max-width: 1024px) { /* Tablet */
+        @media (max-width: 1024px) { /* Tablet View */
             .container {
-                grid-template-columns: repeat(2, 1fr); /* 2 per row */
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        @media (max-width: 768px) { /* Mobile */
+        @media (max-width: 768px) { /* Mobile View */
             .container {
-                grid-template-columns: repeat(1, 1fr); /* 1 per row */
+                grid-template-columns: repeat(1, 1fr);
+                padding: 10px;
+            }
+
+            .card {
+                width: 100%;
+                max-width: 400px;
+                margin: auto;
             }
         }
     </style>
 </head>
-<body style="color: #070738; background-color: #070738;">
-    
+<body>
     <%- include('./partials/nav') %>
 
-    <h1 style="color: aliceblue;">Welcome to the Blog!</h1>
-    <p style="color: aliceblue;">This is the homepage.</p>
+    <div class="main-content">
+        <h1>Welcome to the Blog!</h1>
+        <p>This is the homepage.</p>
 
-    <div class="container">
-        <% blogs.forEach(blog => { %>
-            <div class="card">
-                <img src="<%= blog.coverImageUrl %>" class="card-img-top" alt="Blog Image">
-                <div class="card-body">
-                    <h5 class="card-title"><%= blog.title %></h5>
-                    <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+        <div class="container">
+            <% blogs.forEach(blog => { %>
+                <div class="card">
+                    <img src="<%= blog.coverImageUrl %>" class="card-img-top" alt="Blog Image">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= blog.title %></h5>
+                        <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+                    </div>
                 </div>
-            </div>
-        <% }) %>
+            <% }) %>
+        </div>
     </div>
 
-    <%- include('./partials/scripts') %>
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>© <%= new Date().getFullYear() %> Blog Website. All rights reserved.</p>
+        <p>Created by <a href="https://github.com/Anand0605/Youtube-Blog" target="_blank">Anand Gautam</a></p>
+    </footer>
 
+    <%- include('./partials/scripts') %>
 </body>
 </html>

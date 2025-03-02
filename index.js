@@ -8,7 +8,7 @@ const Blog = require("./models/blog");
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 // ✅ MongoDB Connection
 mongoose
@@ -23,14 +23,13 @@ app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
 // ✅ Middleware Setup
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json()); // 🛠 FIX: JSON data parse karega
+app.use(express.urlencoded({ extended: true })); // ✅ Form-data handle karega
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.resolve("./public")));
 
-// ✅ **IMPORTANT: Move this middleware BEFORE routes**
 app.use((req, res, next) => {
-  // console.log("🔹 Middleware: Current User:", req.user);  // ✅ Debugging
   res.locals.user = req.user || null;  
   next();
 });
@@ -39,14 +38,11 @@ app.use((req, res, next) => {
 app.get("/", async (req, res) => {
   try {
     const allBlogs = await Blog.find({});
-    // console.log("🏠 Home Route: User ->", req.user); // ✅ Debugging
-
     res.render("home", {
       user: req.user || null,
       blogs: allBlogs,
     });
   } catch (error) {
-    // console.error("❌ Error Fetching Blogs:", error);
     res.status(500).send("Internal Server Error");
   }
 });
