@@ -1,3 +1,6 @@
+
+
+
 // const { Router } = require("express");
 // const multer = require("multer");
 // const path = require("path");
@@ -54,14 +57,13 @@
 
 //         res.render("blogDetail", { blogDetail, user: req.user || null });
 //     } catch (error) {
-//         console.error("Error fetching blog:", error); // ✅ Log error details
+//         console.error("Error fetching blog:", error);
 //         res.status(500).send("Internal Server Error");
 //     }
 // });
 
-
 // // 📝 POST: Add a Comment to Blog
-// router.post("/comment/:blogId", ensureAuthenticated, async (req, res) => {
+// router.post("/blogDetail/comment/:blogId", ensureAuthenticated, async (req, res) => {
 //     try {
 //         const { blogId } = req.params;
 
@@ -77,6 +79,9 @@
 
 //         // ✅ Add comment to blog
 //         await Blog.findByIdAndUpdate(blogId, { $push: { comments: comment._id } });
+
+//         // ✅ Console me comment print hoga
+//         console.log(`New Comment Added by ${req.user.username}: "${req.body.content}"`);
 
 //         return res.redirect(`/blog/${blogId}`);
 //     } catch (error) {
@@ -99,6 +104,7 @@
 //             createdBy: req.user._id,
 //             coverImageUrl: `/uploads/${req.file.filename}`
 //         });
+
 //         res.redirect(`/blog/${blog._id}`);
 //     } catch (error) {
 //         console.error("Error creating blog:", error);
@@ -107,6 +113,8 @@
 // });
 
 // module.exports = router;
+
+// 22222222222222222
 
 
 const { Router } = require("express");
@@ -155,10 +163,10 @@ router.get("/:id", async (req, res) => {
         }
 
         const blogDetail = await Blog.findById(id)
-            .populate("createdBy")
+            .populate("createdBy", "fullname profileImageURL")
             .populate({
                 path: "comments",
-                populate: { path: "user", select: "username" }
+                populate: { path: "user", select: "fullname profileImageURL" }
             });
 
         if (!blogDetail) return res.status(404).send("Blog not found");
@@ -170,8 +178,8 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// 📝 POST: Add a Comment to Blog
-router.post("/blogDetail/comment/:blogId", ensureAuthenticated, async (req, res) => {
+// 📝 POST: Add a Comment to Blog (✅ Fixed Route)
+router.post("/comment/:blogId", ensureAuthenticated, async (req, res) => {
     try {
         const { blogId } = req.params;
 
@@ -188,8 +196,7 @@ router.post("/blogDetail/comment/:blogId", ensureAuthenticated, async (req, res)
         // ✅ Add comment to blog
         await Blog.findByIdAndUpdate(blogId, { $push: { comments: comment._id } });
 
-        // ✅ Console me comment print hoga
-        console.log(`New Comment Added by ${req.user.username}: "${req.body.content}"`);
+        console.log(`New Comment Added by ${req.user.fullname}: "${req.body.content}"`);
 
         return res.redirect(`/blog/${blogId}`);
     } catch (error) {
@@ -198,7 +205,7 @@ router.post("/blogDetail/comment/:blogId", ensureAuthenticated, async (req, res)
     }
 });
 
-// 📝 POST: Create New Blog (Requires Login)
+// 📝 POST: Create New Blog
 router.post("/", ensureAuthenticated, upload.single("coverImage"), async (req, res) => {
     try {
         if (!req.file) {
@@ -221,4 +228,5 @@ router.post("/", ensureAuthenticated, upload.single("coverImage"), async (req, r
 });
 
 module.exports = router;
+
 

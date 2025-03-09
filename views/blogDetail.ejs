@@ -1,6 +1,8 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <%- include('./partials/head') %>
     <title><%= blogDetail ? blogDetail.title : "Blog Not Found" %></title>
@@ -30,9 +32,7 @@
         }
 
         .image-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
         }
 
         .blog-meta {
@@ -48,13 +48,8 @@
             border-radius: 6px;
             object-fit: cover;
             display: block;
+            margin: auto;
         }
-
-        /* .blog-content {
-            font-size: 18px;
-            line-height: 1.8;
-            text-align: justify;
-        } */
 
         pre {
             background-color: #f4f4f4;
@@ -68,19 +63,6 @@
         code {
             font-family: 'Courier New', monospace;
             color: #d63384;
-        }
-
-        /* .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 16px;
-        } */
-
-        .login-status {
-            text-align: right;
-            margin-bottom: 10px;
-            font-size: 14px;
         }
 
         .comments-container {
@@ -130,14 +112,6 @@
 <body>
     <%- include('./partials/nav') %>
     <div class="container">
-        <div class="login-status">
-            <% if (user) { %>
-                <p>Welcome, <strong><%= user.fullname %></strong></p>
-            <% } else { %>
-                <p><a href="/login">Login</a> to add a blog</p>
-            <% } %>
-        </div>
-
         <% if (blogDetail) { %>
             <h1><%= blogDetail.title %></h1>
             <div class="image-wrapper">
@@ -146,45 +120,33 @@
                     <img src="<%= blogDetail.coverImageUrl %>" class="blog-image" alt="Blog Image">
                 <% } %>
             </div>
-            <div class="mt-2">
-                <% if (blogDetail.createdBy) { %>
-                    <img src="<%= blogDetail.createdBy.profileImageURL %>" width="40px" alt="Author Image">
-                    <p><strong>Author:</strong> <%= blogDetail.createdBy.fullname %></p>
-                <% } %>
-            </div>
+
             <div class="blog-content">
                 <pre>
                     <%- blogDetail.body.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>') %>
                 </pre>
             </div>
+
             <div class="comments-container">
-                <h1>Comments</h1>
+                <h2>Comments</h2>
                 <% if (user) { %>
-                    <form class="comment-form" action="/blogDetail/comment/<%= blogDetail._id %>" method="POST">
+                    <form class="comment-form" action="/blog/comment/<%= blogDetail._id %>" method="POST">
                         <input type="text" name="content" placeholder="Enter your comment" required />
                         <button type="submit">Add Comment</button>
                     </form>
                 <% } else { %>
                     <p><a href="/login">Login</a> to add a comment.</p>
                 <% } %>
-                <% if (blogDetail.comments && blogDetail.comments.length > 0) {     %>
-                    <div class="comments-list">
-                        <% blogDetail.comments.forEach(comment => { %>
-                            <div class="comment">
-                                <img src="<%= comment.createdBy.profileImageURL %>" width="50px" alt="User Image">
-                                <p><strong><%= comment.createdBy.fullname %></strong>: <%= comment.content %></p>
-                            </div>
-                        <% }) %>
+
+                <% blogDetail.comments.forEach(comment => { %>
+                    <div class="comment">
+                        <p><strong><%= comment.user.fullname %></strong>: <%= comment.content %></p>
                     </div>
-                <% } else { %>
-                    <p>No comments yet. Be the first to comment!</p>
-                <% } %>
+                <% }) %>
             </div>
         <% } else { %>
             <h1>Blog Not Found</h1>
-            <p>Sorry, the blog post you are looking for does not exist.</p>
         <% } %>
-        <a href="/" class="back-link">← Back to Home</a>
     </div>
     <%- include('./partials/scripts') %>
 </body>
